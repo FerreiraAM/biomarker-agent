@@ -4,6 +4,17 @@ A lightweight Python pipeline to search PubMed for biomarker-disease literature,
 
 ---
 
+## Purpose
+
+This project demonstrates a lightweight biomedical text-mining pipeline for:
+
+- Biomarker evidence aggregation
+- Translational literature synthesis
+- Structured extraction from PubMed abstracts
+- Reproducible, interpretable bioinformatics workflows
+
+---
+
 ## What it does
 
 ### 1. `fetch_pubmed.py` — Search & extract
