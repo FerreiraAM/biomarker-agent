@@ -83,6 +83,14 @@ python summarize_evidence.py BRCA1_breast_cancer.csv
 
 ---
 
+## Development approach
+
+This project was built using an AI-assisted development workflow (Claude Code) to accelerate Python implementation and refactoring.
+
+All biomarker extraction logic remains rule-based and fully interpretable, with no dependency on external LLMs or black-box models.
+
+---
+
 ## Notes
 
 - No API key required — the pipeline uses NCBI's public Entrez API via Biopython
