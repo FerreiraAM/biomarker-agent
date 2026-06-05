@@ -110,6 +110,26 @@ def summarize_biomarker(biomarker: str, rows: list[dict]) -> str:
     return "\n".join(lines)
 
 
+def generate_report(rows: list[dict]) -> str:
+    """
+    Generate a full evidence report from a list of paper dicts.
+    Callable directly without going through a CSV file — used by the Streamlit app.
+    """
+    groups: dict[str, list[dict]] = {}
+    for row in rows:
+        biomarker = row.get("biomarker", "").strip()
+        if biomarker:
+            groups.setdefault(biomarker, []).append(row)
+
+    if not groups:
+        return "No biomarker data found."
+
+    sections = [f"Biomarkers found: {len(groups)}\n"]
+    for biomarker, biomarker_rows in sorted(groups.items()):
+        sections.append(summarize_biomarker(biomarker, biomarker_rows))
+    return "\n".join(sections)
+
+
 def main():
     if len(sys.argv) != 2:
         print("Usage: python summarize_evidence.py <csv_file>")

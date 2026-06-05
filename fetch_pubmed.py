@@ -71,8 +71,8 @@ def build_query(biomarker: str, disease: str) -> str:
     return f"{biomarker}[Title/Abstract] AND {disease}[Title/Abstract]"
 
 
-def search_pubmed(query: str) -> list[str]:
-    handle = Entrez.esearch(db="pubmed", term=query, retmax=MAX_RESULTS)
+def search_pubmed(query: str, max_results: int = MAX_RESULTS) -> list[str]:
+    handle = Entrez.esearch(db="pubmed", term=query, retmax=max_results)
     record = Entrez.read(handle)
     handle.close()
     return record["IdList"]
