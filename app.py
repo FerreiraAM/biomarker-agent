@@ -66,7 +66,21 @@ if search:
         "study_type", "biomarker_classification", "directionality",
         "key_finding", "abstract",
     ]]
-    st.dataframe(df, use_container_width=True, hide_index=True)
+    st.dataframe(
+        df,
+        use_container_width=True,
+        hide_index=True,
+        column_config={
+            "pmid":                   st.column_config.TextColumn("PMID",            width="small"),
+            "title":                  st.column_config.TextColumn("Title",           width="large",  wrap_text=True),
+            "year":                   st.column_config.TextColumn("Year",            width="small"),
+            "study_type":             st.column_config.TextColumn("Study Type",      width="medium"),
+            "biomarker_classification": st.column_config.TextColumn("Classification", width="medium"),
+            "directionality":         st.column_config.TextColumn("Directionality",  width="medium"),
+            "key_finding":            st.column_config.TextColumn("Key Finding",     width="large",  wrap_text=True),
+            "abstract":               st.column_config.TextColumn("Abstract",        width="large",  wrap_text=True),
+        },
+    )
 
     # ── Evidence summary ──────────────────────────────────────────────────────
     st.subheader("Evidence Summary")
