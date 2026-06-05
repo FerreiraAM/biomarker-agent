@@ -15,6 +15,14 @@ This project demonstrates a lightweight biomedical text-mining pipeline for:
 
 ---
 
+## Development approach
+
+This project was built using an AI-assisted development workflow (Claude Code) to accelerate Python implementation and refactoring.
+
+All biomarker extraction logic remains rule-based and fully interpretable, with no dependency on external LLMs or black-box models.
+
+---
+
 ## What it does
 
 ### 1. `fetch_pubmed.py` — Search & extract
@@ -96,14 +104,6 @@ A browser window opens at `http://localhost:8501`. Enter a biomarker, disease, a
 | `key_finding` | Last sentence of the abstract |
 | `biomarker_classification` | Role of the biomarker |
 | `directionality` | Direction of expression change |
-
----
-
-## Development approach
-
-This project was built using an AI-assisted development workflow (Claude Code) to accelerate Python implementation and refactoring.
-
-All biomarker extraction logic remains rule-based and fully interpretable, with no dependency on external LLMs or black-box models.
 
 ---
 
