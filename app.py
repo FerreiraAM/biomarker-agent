@@ -6,6 +6,7 @@ Usage:
 
 import pandas as pd
 import streamlit as st
+from st_aggrid import AgGrid, GridOptionsBuilder
 
 from fetch_pubmed import build_query, search_pubmed, fetch_details, extract_evidence
 from summarize_evidence import generate_report
@@ -65,22 +66,30 @@ if search:
         "pmid", "title", "year",
         "study_type", "biomarker_classification", "directionality",
         "key_finding", "abstract",
-    ]]
-    st.dataframe(
-        df,
-        use_container_width=True,
-        hide_index=True,
-        column_config={
-            "pmid":                     st.column_config.TextColumn("PMID",            width="small"),
-            "title":                    st.column_config.TextColumn("Title",           width="large"),
-            "year":                     st.column_config.TextColumn("Year",            width="small"),
-            "study_type":               st.column_config.TextColumn("Study Type",      width="medium"),
-            "biomarker_classification": st.column_config.TextColumn("Classification",  width="medium"),
-            "directionality":           st.column_config.TextColumn("Directionality",  width="medium"),
-            "key_finding":              st.column_config.TextColumn("Key Finding",     width="large"),
-            "abstract":                 st.column_config.TextColumn("Abstract",        width="large"),
-        },
-    )
+    ]].rename(columns={
+        "pmid":                     "PMID",
+        "title":                    "Title",
+        "year":                     "Year",
+        "study_type":               "Study Type",
+        "biomarker_classification": "Classification",
+        "directionality":           "Directionality",
+        "key_finding":              "Key Finding",
+        "abstract":                 "Abstract",
+    })
+
+    gb = GridOptionsBuilder.from_dataframe(df)
+    gb.configure_default_column(wrapText=True, autoHeight=True, resizable=True)
+    gb.configure_column("PMID",           width=100)
+    gb.configure_column("Year",           width=80)
+    gb.configure_column("Study Type",     width=130)
+    gb.configure_column("Classification", width=140)
+    gb.configure_column("Directionality", width=130)
+    gb.configure_column("Title",          width=280)
+    gb.configure_column("Key Finding",    width=300)
+    gb.configure_column("Abstract",       width=400)
+    gb.configure_grid_options(domLayout="autoHeight")
+
+    AgGrid(df, gridOptions=gb.build(), use_container_width=True)
 
     # ── Evidence summary ──────────────────────────────────────────────────────
     st.subheader("Evidence Summary")
