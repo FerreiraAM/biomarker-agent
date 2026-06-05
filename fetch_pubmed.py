@@ -10,6 +10,11 @@ import re
 import sys
 from Bio import Entrez
 
+
+def strip_html(text: str) -> str:
+    """Remove HTML tags (e.g. <i>, <sup>, <b>) from a string."""
+    return re.sub(r"<[^>]+>", "", text)
+
 Entrez.email = "anne-maud.ferreira@epfedu.fr"
 
 MAX_RESULTS = 10
@@ -101,7 +106,12 @@ def fetch_details(pmids: list[str]) -> list[dict]:
         else:
             abstract = str(abstract_texts)
 
-        papers.append({"pmid": pmid, "title": title, "year": year, "abstract": abstract})
+        papers.append({
+            "pmid": pmid,
+            "title": strip_html(title),
+            "year": year,
+            "abstract": strip_html(abstract),
+        })
 
     return papers
 
