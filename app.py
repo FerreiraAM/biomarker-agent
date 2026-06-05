@@ -74,7 +74,7 @@ if search:
     st.session_state.df = pd.DataFrame(all_papers)[[
         "pmid", "title", "year",
         "study_type", "biomarker_classification", "directionality",
-        "key_finding", "abstract",
+        "key_finding", "abstract", "first_author",
     ]].rename(columns={
         "pmid":                     "PMID",
         "title":                    "Title",
@@ -84,6 +84,7 @@ if search:
         "directionality":           "Directionality",
         "key_finding":              "Key Finding",
         "abstract":                 "Abstract",
+        "first_author":             "First Author",
     })
     st.session_state.report = generate_report(all_papers)
 
@@ -99,6 +100,7 @@ if st.session_state.df is not None:
     gb.configure_default_column(wrapText=True, autoHeight=True, resizable=True)
     gb.configure_column("PMID",           width=100)
     gb.configure_column("Year",           width=80)
+    gb.configure_column("First Author",   hide=True)
     gb.configure_column("Study Type",     width=130)
     gb.configure_column("Classification", width=140)
     gb.configure_column("Directionality", width=130)
@@ -120,7 +122,7 @@ if st.session_state.df is not None:
     if selected is not None and len(selected) > 0:
         row = selected[0] if isinstance(selected, list) else selected.iloc[0]
         st.subheader("Abstract")
-        st.info(f"**{row['Title']}** ({row['Year']})\n\n{row['Abstract']}")
+        st.info(f"**{row['Title']}**\n{row['First Author']} et al. ({row['Year']})\n\n{row['Abstract']}")
 
     # ── Evidence summary ──────────────────────────────────────────────────────
     st.subheader("Evidence Summary")

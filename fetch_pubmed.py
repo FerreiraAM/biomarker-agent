@@ -106,11 +106,22 @@ def fetch_details(pmids: list[str]) -> list[dict]:
         else:
             abstract = str(abstract_texts)
 
+        # First author: LastName Initials (e.g. "Smith JA")
+        authors = art.get("AuthorList", [])
+        if authors:
+            first = authors[0]
+            last = str(first.get("LastName", ""))
+            initials = str(first.get("Initials", ""))
+            first_author = f"{last} {initials}".strip() if last else "Unknown"
+        else:
+            first_author = "Unknown"
+
         papers.append({
             "pmid": pmid,
             "title": strip_html(title),
             "year": year,
             "abstract": strip_html(abstract),
+            "first_author": first_author,
         })
 
     return papers
@@ -230,7 +241,7 @@ def print_results(papers: list[dict]) -> None:
 
 def save_csv(papers: list[dict], filepath: str) -> None:
     fieldnames = [
-        "pmid", "title", "year", "abstract",
+        "pmid", "title", "year", "abstract", "first_author",
         "biomarker", "disease", "study_type", "key_finding",
         "biomarker_classification", "directionality",
     ]
