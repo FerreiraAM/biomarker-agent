@@ -114,7 +114,7 @@ if st.session_state.df is not None:
         gridOptions=gb.build(),
         update_mode=GridUpdateMode.SELECTION_CHANGED,
         use_container_width=True,
-        height=650,
+        height=450,
     )
 
     # ── Abstract on row click ─────────────────────────────────────────────────
