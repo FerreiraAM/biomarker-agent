@@ -6,7 +6,7 @@ Usage:
 
 import pandas as pd
 import streamlit as st
-from st_aggrid import AgGrid, GridOptionsBuilder
+from st_aggrid import AgGrid, GridOptionsBuilder, GridUpdateMode
 
 from fetch_pubmed import build_query, search_pubmed, fetch_details, extract_evidence
 from summarize_evidence import generate_report
@@ -14,6 +14,16 @@ from summarize_evidence import generate_report
 st.set_page_config(page_title="Biomarker Evidence Pipeline", layout="wide")
 st.title("Biomarker Evidence Pipeline")
 st.caption("Search PubMed and extract structured biomarker evidence.")
+
+# ── Session state ─────────────────────────────────────────────────────────────
+if "papers" not in st.session_state:
+    st.session_state.papers = []
+if "df" not in st.session_state:
+    st.session_state.df = None
+if "report" not in st.session_state:
+    st.session_state.report = ""
+if "biomarkers" not in st.session_state:
+    st.session_state.biomarkers = []
 
 # ── Inputs ────────────────────────────────────────────────────────────────────
 with st.form("search_form"):
@@ -58,11 +68,10 @@ if search:
         st.error("No results found for any of the biomarkers entered.")
         st.stop()
 
-    papers = all_papers
-
-    # ── Results dataframe ─────────────────────────────────────────────────────
-    st.subheader(f"Results — {len(papers)} paper(s) across {len(biomarkers)} biomarker(s)")
-    df = pd.DataFrame(papers)[[
+    # Store results in session state so they survive reruns triggered by row clicks
+    st.session_state.papers = all_papers
+    st.session_state.biomarkers = biomarkers
+    st.session_state.df = pd.DataFrame(all_papers)[[
         "pmid", "title", "year",
         "study_type", "biomarker_classification", "directionality",
         "key_finding", "abstract",
@@ -76,6 +85,15 @@ if search:
         "key_finding":              "Key Finding",
         "abstract":                 "Abstract",
     })
+    st.session_state.report = generate_report(all_papers)
+
+# ── Display results (persists across reruns) ──────────────────────────────────
+if st.session_state.df is not None:
+    df = st.session_state.df
+    papers = st.session_state.papers
+    biomarkers = st.session_state.biomarkers
+
+    st.subheader(f"Results — {len(papers)} paper(s) across {len(biomarkers)} biomarker(s)")
 
     gb = GridOptionsBuilder.from_dataframe(df)
     gb.configure_default_column(wrapText=True, autoHeight=True, resizable=True)
@@ -86,15 +104,24 @@ if search:
     gb.configure_column("Directionality", width=130)
     gb.configure_column("Title",          width=280)
     gb.configure_column("Key Finding",    width=300)
-    gb.configure_column("Abstract",       width=400)
-    AgGrid(
+    gb.configure_column("Abstract",       hide=True)
+    gb.configure_selection(selection_mode="single", use_checkbox=False)
+
+    grid_response = AgGrid(
         df,
         gridOptions=gb.build(),
+        update_mode=GridUpdateMode.SELECTION_CHANGED,
         use_container_width=True,
         height=650,
     )
 
+    # ── Abstract on row click ─────────────────────────────────────────────────
+    selected = grid_response.get("selected_rows")
+    if selected is not None and len(selected) > 0:
+        row = selected[0] if isinstance(selected, list) else selected.iloc[0]
+        st.subheader("Abstract")
+        st.info(f"**{row['Title']}** ({row['Year']})\n\n{row['Abstract']}")
+
     # ── Evidence summary ──────────────────────────────────────────────────────
     st.subheader("Evidence Summary")
-    report = generate_report(papers)
-    st.text(report)
+    st.text(st.session_state.report)
