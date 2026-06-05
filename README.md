@@ -107,6 +107,14 @@ All biomarker extraction logic remains rule-based and fully interpretable, with 
 
 ---
 
+## Limitations
+
+- **Biomarkers** — multiple biomarkers are supported (comma-separated), but NCBI limits unauthenticated requests to 3 per second; searches slow down noticeably above ~10 biomarkers
+- **Disease** — only one disease term per search session
+- **Papers** — capped at 50 results per biomarker in the UI; fetching large numbers of abstracts in a single call may be slow
+
+---
+
 ## Notes
 
 - No API key required — the pipeline uses NCBI's public Entrez API via Biopython
