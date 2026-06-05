@@ -1,6 +1,6 @@
 # Biomarker Evidence Pipeline
 
-A lightweight Python pipeline to search PubMed for biomarker-disease literature, retrieve abstracts, extract structured evidence fields using rule-based methods, and generate a human-readable summary report.
+A lightweight Python pipeline to search PubMed for biomarker-disease literature, retrieve abstracts, extract structured evidence fields using rule-based methods, and generate a human-readable summary report. Includes an interactive Streamlit web interface.
 
 ---
 
@@ -19,11 +19,11 @@ This project demonstrates a lightweight biomedical text-mining pipeline for:
 
 ### 1. `fetch_pubmed.py` — Search & extract
 - Queries PubMed for papers matching a biomarker and disease term
-- Retrieves PMID, title, publication year, and abstract for the top 10 results
+- Retrieves PMID, title, publication year, and abstract
 - Applies rule-based extraction to each abstract:
   - **study_type** — e.g. cohort, clinical trial, review, in vitro
   - **biomarker_classification** — diagnostic, prognostic, predictive, pharmacodynamic, or unclear
-  - **directionality** — increased, decreased, mixed, or not reported
+  - **directionality** — increased, decreased, mixed, or not reported (negation-aware)
   - **key_finding** — the last sentence of the abstract (typically the conclusion)
 - Saves all fields to a CSV file
 
@@ -37,32 +37,48 @@ This project demonstrates a lightweight biomedical text-mining pipeline for:
   - A short synthesis paragraph assembled from the statistics
 - Prints a clean human-readable report to the terminal
 
+### 3. `app.py` — Streamlit web interface
+- Interactive UI to run the full pipeline from a browser
+- Text inputs for biomarker and disease, number input for result count
+- Displays extracted results in a sortable dataframe
+- Displays the evidence summary report below the table
+
 ---
 
 ## Requirements
 
 - Python 3.9+
-- [Biopython](https://biopython.org/)
+- [Biopython](https://biopython.org/), [Streamlit](https://streamlit.io/), [pandas](https://pandas.pydata.org/)
 
 Install dependencies:
 ```bash
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 ```
 
 ---
 
 ## Usage
 
+### Command-line
+
 **Step 1 — Fetch papers and extract evidence:**
 ```bash
-python fetch_pubmed.py "BRCA1" "breast cancer"
+python3 fetch_pubmed.py "BRCA1" "breast cancer"
 ```
 Output: `BRCA1_breast_cancer.csv`
 
 **Step 2 — Generate evidence summary:**
 ```bash
-python summarize_evidence.py BRCA1_breast_cancer.csv
+python3 summarize_evidence.py BRCA1_breast_cancer.csv
 ```
+
+### Streamlit app
+
+```bash
+python3 -m streamlit run app.py
+```
+
+A browser window opens at `http://localhost:8501`. Enter a biomarker, disease, and number of results, then click **Search PubMed**.
 
 ---
 
