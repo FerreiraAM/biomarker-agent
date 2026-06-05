@@ -29,9 +29,9 @@ def top_n(counter: Counter, n: int) -> list[tuple[str, int]]:
 
 def format_breakdown(counter: Counter) -> str:
     if not counter:
-        return "  (no data)"
+        return "  • (no data)"
     return "\n".join(
-        f"  {value}: {count}"
+        f"  • {value}: {count}"
         for value, count in sorted(counter.items(), key=lambda x: -x[1])
     )
 
@@ -81,28 +81,30 @@ def summarize_biomarker(biomarker: str, rows: list[dict]) -> str:
 
     lines = [
         f"{'='*70}",
-        f"BIOMARKER: {biomarker}",
+        f"  {biomarker}",
         f"{'='*70}",
-        f"Total studies: {total}",
         "",
-        "Study type breakdown:",
+        "📊 Overview",
+        f"  • Total studies: {total}",
+        "",
+        "🔬 Study Types",
         format_breakdown(study_types),
         "",
-        "Biomarker classification breakdown:",
+        "🏷️ Biomarker Classification",
         format_breakdown(classifications),
         "",
-        "Top 3 associated diseases:",
+        "🦠 Associated Diseases",
     ]
 
     if top_diseases:
         for disease, count in top_diseases:
-            lines.append(f"  {disease}: {count}")
+            lines.append(f"  • {disease}: {count}")
     else:
-        lines.append("  (no data)")
+        lines.append("  • (no data)")
 
     lines += [
         "",
-        "Evidence synthesis:",
+        "💡 Synthesis",
         f"  {build_synthesis(biomarker, total, study_types, classifications, top_diseases)}",
         "",
     ]
