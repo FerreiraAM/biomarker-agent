@@ -48,7 +48,8 @@ All biomarker extraction logic remains rule-based and fully interpretable, with 
 ### 3. `app.py` — Streamlit web interface
 - Interactive UI to run the full pipeline from a browser
 - Text inputs for biomarker and disease, number input for result count
-- Displays extracted results in a sortable dataframe
+- Displays extracted results in an interactive AgGrid table (sortable, resizable, with text wrapping)
+- Click any row to reveal the full abstract with first author and year below the table
 - Displays the evidence summary report below the table
 
 ---
@@ -56,7 +57,7 @@ All biomarker extraction logic remains rule-based and fully interpretable, with 
 ## Requirements
 
 - Python 3.9+
-- [Biopython](https://biopython.org/), [Streamlit](https://streamlit.io/), [pandas](https://pandas.pydata.org/)
+- [Biopython](https://biopython.org/), [Streamlit](https://streamlit.io/), [pandas](https://pandas.pydata.org/), [streamlit-aggrid](https://github.com/PablocFonseca/streamlit-aggrid)
 
 Install dependencies:
 ```bash
@@ -103,6 +104,7 @@ A browser window opens at `http://localhost:8501`. Enter a biomarker, disease, a
 | `study_type` | Detected study design |
 | `key_finding` | Last sentence of the abstract |
 | `biomarker_classification` | Role of the biomarker |
+| `first_author` | First author name and initials (e.g. Smith JA) |
 | `directionality` | Direction of expression change |
 
 ---
