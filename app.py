@@ -14,6 +14,13 @@ from summarize_evidence import generate_report
 st.set_page_config(page_title="Biomarker Evidence Pipeline", layout="wide")
 st.title("Biomarker Evidence Pipeline")
 st.caption("Search PubMed and extract structured biomarker evidence.")
+st.markdown(
+    "<div style='text-align: right; color: grey; font-size: 0.8em;'>"
+    "Built by <strong>Anne-Maud Ferreira</strong> · "
+    "Co-developed with <strong>Claude (Anthropic)</strong>"
+    "</div>",
+    unsafe_allow_html=True,
+)
 
 # ── Session state ─────────────────────────────────────────────────────────────
 if "papers" not in st.session_state:
