@@ -15,16 +15,16 @@ st.title("Biomarker Evidence Pipeline")
 st.caption("Search PubMed and extract structured biomarker evidence.")
 
 # ── Inputs ────────────────────────────────────────────────────────────────────
-col1, col2, col3 = st.columns([2, 2, 1])
-with col1:
-    biomarker_input = st.text_input("Biomarker(s)", placeholder="e.g. BRCA1, TP53, IL6")
-with col2:
-    disease = st.text_input("Disease", placeholder="e.g. breast cancer")
-with col3:
-    max_results = st.number_input("Max results per biomarker", min_value=1, max_value=50, value=10)
-
-st.caption("Separate multiple biomarkers with a comma.")
-search = st.button("Search PubMed", type="primary")
+with st.form("search_form"):
+    col1, col2, col3 = st.columns([2, 2, 1])
+    with col1:
+        biomarker_input = st.text_input("Biomarker(s)", placeholder="e.g. BRCA1, TP53, IL6")
+    with col2:
+        disease = st.text_input("Disease", placeholder="e.g. breast cancer")
+    with col3:
+        max_results = st.number_input("Max results per biomarker", min_value=1, max_value=50, value=10)
+    st.caption("Separate multiple biomarkers with a comma.")
+    search = st.form_submit_button("Search PubMed", type="primary")
 
 # ── Pipeline ──────────────────────────────────────────────────────────────────
 if search:
