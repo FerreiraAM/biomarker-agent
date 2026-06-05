@@ -87,9 +87,12 @@ if search:
     gb.configure_column("Title",          width=280)
     gb.configure_column("Key Finding",    width=300)
     gb.configure_column("Abstract",       width=400)
-    gb.configure_grid_options(domLayout="autoHeight")
-
-    AgGrid(df, gridOptions=gb.build(), use_container_width=True)
+    AgGrid(
+        df,
+        gridOptions=gb.build(),
+        use_container_width=True,
+        height=650,
+    )
 
     # ── Evidence summary ──────────────────────────────────────────────────────
     st.subheader("Evidence Summary")
