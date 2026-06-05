@@ -129,7 +129,9 @@ if st.session_state.df is not None:
     if selected is not None and len(selected) > 0:
         row = selected[0] if isinstance(selected, list) else selected.iloc[0]
         st.subheader("Abstract")
+        pubmed_url = f"https://pubmed.ncbi.nlm.nih.gov/{row['PMID']}/"
         st.info(f"**{row['Title']}**\n{row['First Author']} et al. ({row['Year']})\n\n{row['Abstract']}")
+        st.markdown(f"🔗 [View on PubMed]({pubmed_url})")
 
     # ── Evidence summary ──────────────────────────────────────────────────────
     st.subheader("Evidence Summary")
