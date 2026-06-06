@@ -51,7 +51,8 @@ All biomarker extraction logic remains rule-based and fully interpretable, with 
 - Interactive UI to run the full pipeline from a browser
 - Text inputs for biomarker and disease, number input for result count
 - Displays extracted results in an interactive AgGrid table (sortable, resizable, with text wrapping)
-- Click any row to reveal the full abstract with first author and year below the table
+- Click any row to reveal the full abstract with first author, year, and a link to PubMed
+- Export all references as a BibTeX file with one click
 - Displays the evidence summary report below the table
 
 ---
@@ -107,6 +108,7 @@ A browser window opens at `http://localhost:8501`. Enter a biomarker, disease, a
 | `key_finding` | Last sentence of the abstract |
 | `biomarker_classification` | Role of the biomarker |
 | `first_author` | First author name and initials (e.g. Smith JA) |
+| `journal` | Journal name |
 | `directionality` | Direction of expression change |
 
 ---
