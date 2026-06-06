@@ -29,9 +29,9 @@ def top_n(counter: Counter, n: int) -> list[tuple[str, int]]:
 
 def format_breakdown(counter: Counter) -> str:
     if not counter:
-        return "  • (no data)"
+        return "     • (no data)"
     return "\n".join(
-        f"  • {value}: {count}"
+        f"     • {value}: {count}"
         for value, count in sorted(counter.items(), key=lambda x: -x[1])
     )
 
@@ -48,11 +48,11 @@ def build_synthesis(biomarker: str, total: int, study_types: Counter,
     if study_types:
         top_type, top_type_n = study_types.most_common(1)[0]
         sentences.append(
-            f"{total} study/studies were identified for {biomarker}, "
+            f"{total} studies were identified for {biomarker}, "
             f"with {top_type} being the most common study design ({top_type_n} of {total})."
         )
     else:
-        sentences.append(f"{total} study/studies were identified for {biomarker}.")
+        sentences.append(f"{total} studies were identified for {biomarker}.")
 
     # Sentence 2 — classification
     if classifications:
@@ -80,32 +80,32 @@ def summarize_biomarker(biomarker: str, rows: list[dict]) -> str:
     top_diseases = top_n(diseases, 3)
 
     lines = [
-        f"{'='*70}",
-        f"  {biomarker}",
-        f"{'='*70}",
+        f"{'━'*70}",
+        f"  🧬 {biomarker}",
+        f"{'━'*70}",
         "",
-        "📊 Overview",
-        f"  • Total studies: {total}",
+        "  📊 Overview",
+        f"     • Total studies: {total}",
         "",
-        "🔬 Study Types",
+        "  🔬 Study Types",
         format_breakdown(study_types),
         "",
-        "🏷️ Biomarker Classification",
+        "  🏷️  Biomarker Classification",
         format_breakdown(classifications),
         "",
-        "🦠 Associated Diseases",
+        "  🦠 Associated Diseases",
     ]
 
     if top_diseases:
         for disease, count in top_diseases:
-            lines.append(f"  • {disease}: {count}")
+            lines.append(f"     • {disease}: {count}")
     else:
-        lines.append("  • (no data)")
+        lines.append("     • (no data)")
 
     lines += [
         "",
-        "💡 Synthesis",
-        f"  {build_synthesis(biomarker, total, study_types, classifications, top_diseases)}",
+        "  💡 Synthesis",
+        f"     {build_synthesis(biomarker, total, study_types, classifications, top_diseases)}",
         "",
     ]
 
@@ -126,7 +126,13 @@ def generate_report(rows: list[dict]) -> str:
     if not groups:
         return "No biomarker data found."
 
-    sections = [f"Biomarkers found: {len(groups)}\n"]
+    header = "\n".join([
+        f"╔{'═'*70}╗",
+        f"  🧬 EVIDENCE SUMMARY REPORT — {len(groups)} biomarker(s) found",
+        f"╚{'═'*70}╝",
+        "",
+    ])
+    sections = [header]
     for biomarker, biomarker_rows in sorted(groups.items()):
         sections.append(summarize_biomarker(biomarker, biomarker_rows))
     return "\n".join(sections)
