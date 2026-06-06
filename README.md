@@ -1,4 +1,4 @@
-# Biomarker Evidence Pipeline
+# 🧬 Biomarker Evidence Explorer
 
 A lightweight Python pipeline to search PubMed for biomarker-disease literature, retrieve abstracts, extract structured evidence fields using rule-based methods, and generate a human-readable summary report. Includes an interactive Streamlit web interface.
 
