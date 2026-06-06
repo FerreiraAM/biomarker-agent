@@ -138,7 +138,7 @@ if st.session_state.df is not None:
         mime="text/plain",
     )
 
-    gb = GridOptionsBuilder.from_dataframe(df)
+    gb = GridOptionsBuilder.from_dataframe(df.reset_index(drop=True))
     gb.configure_default_column(wrapText=True, autoHeight=True, resizable=True)
     gb.configure_column("PMID",           width=100)
     gb.configure_column("Year",           width=80)
@@ -153,7 +153,7 @@ if st.session_state.df is not None:
     gb.configure_selection(selection_mode="single", use_checkbox=False)
 
     grid_response = AgGrid(
-        df,
+        df.reset_index(drop=True),
         gridOptions=gb.build(),
         update_mode=GridUpdateMode.SELECTION_CHANGED,
         use_container_width=True,
