@@ -200,13 +200,35 @@ def detect_classification(text: str) -> str:
 
 def extract_key_finding(abstract: str) -> str:
     """
-    Return the last sentence of the abstract as the key finding.
-    Conclusions are almost always at the end of a structured abstract.
+    Extract the key finding from an abstract.
+    For structured abstracts: look for a CONCLUSIONS/INTERPRETATION/SIGNIFICANCE section.
+    For unstructured abstracts: fall back to the last substantive sentence.
     """
     if not abstract:
         return ""
+
+    # Labels used in structured PubMed abstracts (case-insensitive)
+    conclusion_labels = [
+        r"conclusions?",
+        r"conclusions? and relevance",
+        r"interpretation",
+        r"significance",
+        r"clinical significance",
+        r"summary",
+        r"take-?away",
+    ]
+    pattern = r"(?i)(?:" + "|".join(conclusion_labels) + r")[:\s]+(.+)"
+    match = re.search(pattern, abstract)
+    if match:
+        conclusion_text = match.group(1).strip()
+        # Return only the first sentence of the conclusion block
+        sentences = re.split(r"(?<=[.!?])\s+", conclusion_text)
+        sentences = [s for s in sentences if len(s) > 20]
+        return sentences[0] if sentences else conclusion_text[:300]
+
+    # Fallback: last substantive sentence
     sentences = re.split(r"(?<=[.!?])\s+", abstract.strip())
-    sentences = [s for s in sentences if len(s) > 20]  # skip very short fragments
+    sentences = [s for s in sentences if len(s) > 20]
     return sentences[-1] if sentences else abstract[:200]
 
 
