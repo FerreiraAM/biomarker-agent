@@ -84,7 +84,6 @@ def summarize_biomarker(biomarker: str, rows: list[dict]) -> str:
 
     lines = [
         f"🧬 {biomarker} · {total} studies",
-        f"{'─'*60}",
         "",
         f"🔬 Study types:      {format_inline(study_types)}",
         f"🏷️  Classification:   {format_inline(classifications)}",
@@ -111,12 +110,7 @@ def generate_report(rows: list[dict]) -> str:
     if not groups:
         return "No biomarker data found."
 
-    header = "\n".join([
-        f"EVIDENCE SUMMARY REPORT — {len(groups)} biomarker(s) found",
-        f"{'═'*60}",
-        "",
-    ])
-    sections = [header]
+    sections = [f"{len(groups)} biomarker(s) found\n"]
     for biomarker, biomarker_rows in sorted(groups.items()):
         sections.append(summarize_biomarker(biomarker, biomarker_rows))
     return "\n".join(sections)
