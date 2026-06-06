@@ -81,7 +81,7 @@ if search:
     st.session_state.df = pd.DataFrame(all_papers)[[
         "pmid", "title", "year",
         "study_type", "biomarker_classification", "directionality",
-        "key_finding", "abstract", "first_author",
+        "key_finding", "abstract", "first_author", "journal",
     ]].rename(columns={
         "pmid":                     "PMID",
         "title":                    "Title",
@@ -92,6 +92,7 @@ if search:
         "key_finding":              "Key Finding",
         "abstract":                 "Abstract",
         "first_author":             "First Author",
+        "journal":                  "Journal",
     })
     st.session_state.report = generate_report(all_papers)
 
@@ -103,11 +104,39 @@ if st.session_state.df is not None:
 
     st.subheader(f"Results — {len(papers)} paper(s) across {len(biomarkers)} biomarker(s)")
 
+    # ── BibTeX export for all results ─────────────────────────────────────────
+    def build_bibtex_all(dataframe: pd.DataFrame) -> str:
+        entries = []
+        for _, row in dataframe.iterrows():
+            last_name = row["First Author"].split()[0] if row["First Author"] != "Unknown" else "Unknown"
+            cite_key = f"{last_name}{row['Year']}"
+            pubmed_url = f"https://pubmed.ncbi.nlm.nih.gov/{row['PMID']}/"
+            entry = (
+                f"@article{{{cite_key},\n"
+                f"  author  = {{{row['First Author']} et al.}},\n"
+                f"  title   = {{{row['Title']}}},\n"
+                f"  journal = {{{row['Journal']}}},\n"
+                f"  year    = {{{row['Year']}}},\n"
+                f"  note    = {{PMID: {row['PMID']}}},\n"
+                f"  url     = {{{pubmed_url}}}\n"
+                f"}}"
+            )
+            entries.append(entry)
+        return "\n\n".join(entries)
+
+    st.download_button(
+        label="📄 Export all references as BibTeX",
+        data=build_bibtex_all(df),
+        file_name="references.bib",
+        mime="text/plain",
+    )
+
     gb = GridOptionsBuilder.from_dataframe(df)
     gb.configure_default_column(wrapText=True, autoHeight=True, resizable=True)
     gb.configure_column("PMID",           width=100)
     gb.configure_column("Year",           width=80)
     gb.configure_column("First Author",   hide=True)
+    gb.configure_column("Journal",        hide=True)
     gb.configure_column("Study Type",     width=130)
     gb.configure_column("Classification", width=140)
     gb.configure_column("Directionality", width=130)
@@ -131,6 +160,7 @@ if st.session_state.df is not None:
         st.subheader("Abstract")
         pubmed_url = f"https://pubmed.ncbi.nlm.nih.gov/{row['PMID']}/"
         st.info(f"**{row['Title']}**\n{row['First Author']} et al. ({row['Year']})\n\n{row['Abstract']}")
+
         st.markdown(f"🔗 [View on PubMed]({pubmed_url})")
 
     # ── Evidence summary ──────────────────────────────────────────────────────

@@ -97,8 +97,10 @@ def fetch_details(pmids: list[str]) -> list[dict]:
         pmid = str(medline["PMID"])
         title = str(art.get("ArticleTitle", "No title"))
 
-        pub_date = art.get("Journal", {}).get("JournalIssue", {}).get("PubDate", {})
+        journal_info = art.get("Journal", {})
+        pub_date = journal_info.get("JournalIssue", {}).get("PubDate", {})
         year = str(pub_date.get("Year", pub_date.get("MedlineDate", "Unknown")))
+        journal = str(journal_info.get("Title", ""))
 
         abstract_texts = art.get("Abstract", {}).get("AbstractText", [])
         if isinstance(abstract_texts, list):
@@ -122,6 +124,7 @@ def fetch_details(pmids: list[str]) -> list[dict]:
             "year": year,
             "abstract": strip_html(abstract),
             "first_author": first_author,
+            "journal": journal,
         })
 
     return papers
@@ -241,7 +244,7 @@ def print_results(papers: list[dict]) -> None:
 
 def save_csv(papers: list[dict], filepath: str) -> None:
     fieldnames = [
-        "pmid", "title", "year", "abstract", "first_author",
+        "pmid", "title", "year", "abstract", "first_author", "journal",
         "biomarker", "disease", "study_type", "key_finding",
         "biomarker_classification", "directionality",
     ]
