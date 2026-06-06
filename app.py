@@ -30,8 +30,8 @@ This tool searches PubMed and extracts structured evidence fields using rule-bas
 ---
 
 **Study type**
-Keywords matched against title + abstract (case-insensitive). Priority order:
-meta-analysis → review → clinical trial → cohort → case-control → in vitro → observational → other
+Keywords matched against title + abstract (case-insensitive). Priority order of the labels:
+`meta-analysis` → `review` → `clinical trial` → `cohort` → `case-control` → `in vitro` → `observational` → `other`
 
 **Classification**
 Sentence-level keyword/regex matching (negation-aware).
