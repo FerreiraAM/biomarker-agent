@@ -11,3 +11,6 @@ __pycache__/
 
 # Jupyter
 .ipynb_checkpoints/
+
+# Claude Code internal instructions
+CLAUDE.md
