@@ -36,7 +36,7 @@ All biomarker extraction logic remains rule-based and fully interpretable, with 
   - **study_type** — e.g. cohort, clinical trial, review, in vitro
   - **biomarker_classification** — diagnostic, prognostic, predictive, pharmacodynamic, or unclear
   - **directionality** — increased, decreased, mixed, or not reported (negation-aware)
-  - **key_finding** — the last sentence of the abstract (typically the conclusion)
+  - **key_finding** — the conclusion sentence extracted from the `CONCLUSIONS` section of structured abstracts; falls back to the last sentence for unstructured abstracts
 - Saves all fields to a CSV file
 
 ### 2. `summarize_evidence.py` — Evidence summary
