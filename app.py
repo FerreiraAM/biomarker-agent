@@ -9,7 +9,7 @@ import streamlit as st
 from st_aggrid import AgGrid, GridOptionsBuilder, GridUpdateMode
 
 from fetch_pubmed import build_query, search_pubmed, fetch_details, extract_evidence
-from summarize_evidence import generate_report
+from summarize_evidence import generate_report, summarize_biomarker
 
 st.set_page_config(page_title="Biomarker Evidence Explorer", layout="wide")
 st.title("🧬 Biomarker Evidence Explorer")
@@ -172,5 +172,13 @@ if st.session_state.df is not None:
         st.markdown(f"🔗 [View on PubMed]({pubmed_url})")
 
     # ── Evidence summary ──────────────────────────────────────────────────────
-    st.subheader("Evidence Summary")
-    st.text(st.session_state.report)
+    st.subheader("Evidence Summary Report")
+    st.text(f"{len(papers)} biomarker(s) found" if len(st.session_state.biomarkers) > 1 else "1 biomarker found")
+    for biomarker, biomarker_rows in sorted(
+        {b: [p for p in papers if p.get("biomarker") == b] for b in st.session_state.biomarkers}.items()
+    ):
+        st.subheader(biomarker)
+        # Strip the biomarker title line (first 2 lines) since we render it as subheader
+        section = summarize_biomarker(biomarker, biomarker_rows)
+        body = "\n".join(section.strip().splitlines()[2:])
+        st.text(body)
