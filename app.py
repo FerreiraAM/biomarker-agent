@@ -173,4 +173,4 @@ if st.session_state.df is not None:
 
     # ── Evidence summary ──────────────────────────────────────────────────────
     st.subheader("Evidence Summary")
-    st.text(st.session_state.report)
+    st.markdown(st.session_state.report)

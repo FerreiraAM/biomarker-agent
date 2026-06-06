@@ -83,7 +83,7 @@ def summarize_biomarker(biomarker: str, rows: list[dict]) -> str:
     directionalities = count_field(rows, "directionality")
 
     lines = [
-        f"🧬 {biomarker} · {total} studies",
+        f"🧬 **{biomarker}** · {total} studies",
         "",
         f"🔬 Study types:      {format_inline(study_types)}",
         f"🏷️  Classification:   {format_inline(classifications)}",
