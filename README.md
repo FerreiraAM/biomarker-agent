@@ -57,12 +57,29 @@ All biomarker extraction logic remains rule-based and fully interpretable, with 
 
 ---
 
-## Requirements
+## Getting started
+
+### 1. Clone the repository
+
+```bash
+git clone git@github.com:FerreiraAM/biomarker-agent.git
+cd biomarker-agent
+```
+
+Or using HTTPS:
+
+```bash
+git clone https://github.com/FerreiraAM/biomarker-agent.git
+cd biomarker-agent
+```
+
+### 2. Requirements
 
 - Python 3.9+
 - [Biopython](https://biopython.org/), [Streamlit](https://streamlit.io/), [pandas](https://pandas.pydata.org/), [streamlit-aggrid](https://github.com/PablocFonseca/streamlit-aggrid)
 
-Install dependencies:
+### 3. Install dependencies
+
 ```bash
 pip3 install -r requirements.txt
 ```
