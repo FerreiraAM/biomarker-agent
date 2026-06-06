@@ -14,6 +14,12 @@ from summarize_evidence import generate_report
 st.set_page_config(page_title="Biomarker Evidence Pipeline", layout="wide")
 st.title("Biomarker Evidence Pipeline")
 st.caption("Search PubMed and extract structured biomarker evidence.")
+st.info(
+    "ℹ️ **How it works:** This tool searches PubMed and extracts structured evidence fields "
+    "(study type, biomarker classification, directionality) using rule-based methods "
+    "(keyword matching + regex). No LLM or external AI service is used — "
+    "all extraction is transparent and reproducible."
+)
 st.markdown(
     "<div style='text-align: right; color: grey; font-size: 0.8em;'>"
     "Built by <strong>Anne-Maud Ferreira</strong> · "
