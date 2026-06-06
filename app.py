@@ -109,7 +109,7 @@ if st.session_state.df is not None:
     biomarkers = st.session_state.biomarkers
 
     st.subheader(f"Results — {len(papers)} paper(s) across {len(biomarkers)} biomarker(s)")
-    st.caption("💡 Tip: Click on any row to display the full abstract below the table.")
+    st.caption("💡 Tip: Click on any cell in a row to display the full abstract below the table.")
 
     # ── BibTeX export for all results ─────────────────────────────────────────
     def build_bibtex_all(dataframe: pd.DataFrame) -> str:
@@ -158,6 +158,7 @@ if st.session_state.df is not None:
         update_mode=GridUpdateMode.SELECTION_CHANGED,
         use_container_width=True,
         height=450,
+        allow_unsafe_jscode=True,
     )
 
     # ── Abstract on row click ─────────────────────────────────────────────────
