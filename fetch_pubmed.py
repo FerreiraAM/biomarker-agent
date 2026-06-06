@@ -198,16 +198,57 @@ def detect_classification(text: str) -> str:
     return "unclear"
 
 
+def _is_funding_line(sentence: str) -> bool:
+    """Return True if a sentence looks like a funding acknowledgment rather than a finding."""
+    s = sentence.strip()
+    if len(s) > 100:
+        return False
+    verbs = ["is", "are", "was", "were", "have", "has", "suggest", "show", "demonstrate",
+             "indicate", "support", "reveal", "provide", "enable", "encourage", "conclude"]
+    lower = s.lower()
+    return not any(v in lower for v in verbs)
+
+
+CONCLUSION_CUES = [
+    r"our findings",
+    r"our results",
+    r"our study",
+    r"our data",
+    r"we conclude",
+    r"we show",
+    r"we demonstrate",
+    r"we report",
+    r"we suggest",
+    r"we found",
+    r"these results",
+    r"these findings",
+    r"this study",
+    r"this case",
+    r"taken together",
+    r"in conclusion",
+    r"in summary",
+    r"altogether",
+    r"collectively",
+    r"thus,",
+    r"therefore,",
+    r"together,",
+]
+
+
 def extract_key_finding(abstract: str) -> str:
     """
-    Extract the key finding from an abstract.
-    For structured abstracts: look for a CONCLUSIONS/INTERPRETATION/SIGNIFICANCE section.
-    For unstructured abstracts: fall back to the last substantive sentence.
+    Extract the key finding from an abstract using a three-step strategy:
+    1. Look for a labelled CONCLUSIONS/INTERPRETATION section (structured abstracts).
+    2. Look for sentences containing conclusion-indicator phrases.
+    3. Fall back to the last substantive sentence, skipping funding/acknowledgment lines.
     """
     if not abstract:
         return ""
 
-    # Labels used in structured PubMed abstracts (case-insensitive)
+    sentences = re.split(r"(?<=[.!?])\s+", abstract.strip())
+    sentences = [s for s in sentences if len(s) > 20]
+
+    # Step 1 — labelled conclusion section
     conclusion_labels = [
         r"conclusions?",
         r"conclusions? and relevance",
@@ -215,20 +256,26 @@ def extract_key_finding(abstract: str) -> str:
         r"significance",
         r"clinical significance",
         r"summary",
-        r"take-?away",
     ]
     pattern = r"(?i)(?:" + "|".join(conclusion_labels) + r")[:\s]+(.+)"
     match = re.search(pattern, abstract)
     if match:
         conclusion_text = match.group(1).strip()
-        # Return only the first sentence of the conclusion block
-        sentences = re.split(r"(?<=[.!?])\s+", conclusion_text)
-        sentences = [s for s in sentences if len(s) > 20]
-        return sentences[0] if sentences else conclusion_text[:300]
+        sents = re.split(r"(?<=[.!?])\s+", conclusion_text)
+        sents = [s for s in sents if len(s) > 20]
+        return sents[0] if sents else conclusion_text[:300]
 
-    # Fallback: last substantive sentence
-    sentences = re.split(r"(?<=[.!?])\s+", abstract.strip())
-    sentences = [s for s in sentences if len(s) > 20]
+    # Step 2 — conclusion-indicator phrases
+    for sentence in sentences:
+        lower = sentence.lower()
+        if any(re.search(cue, lower) for cue in CONCLUSION_CUES):
+            return sentence
+
+    # Step 3 — last substantive sentence, skipping funding lines
+    for sentence in reversed(sentences):
+        if not _is_funding_line(sentence):
+            return sentence
+
     return sentences[-1] if sentences else abstract[:200]
 
 
