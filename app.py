@@ -14,12 +14,6 @@ from summarize_evidence import generate_report, summarize_biomarker
 st.set_page_config(page_title="Biomarker Evidence Explorer", layout="wide")
 st.title("🧬 Biomarker Evidence Explorer")
 st.caption("Search PubMed and extract structured biomarker evidence.")
-st.info(
-    "ℹ️ **How it works:** This tool searches PubMed and extracts structured evidence fields "
-    "(study type, biomarker classification, directionality) using rule-based methods "
-    "(keyword matching + regex). No LLM or external AI service is used — "
-    "all extraction is transparent and reproducible."
-)
 st.markdown(
     "<div style='text-align: right; color: grey; font-size: 0.8em;'>"
     "Built by <strong>Anne-Maud Ferreira</strong> · "
@@ -28,8 +22,13 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-with st.expander("ℹ️ How extraction works"):
+with st.expander("ℹ️ How it works"):
     st.markdown("""
+This tool searches PubMed and extracts structured evidence fields using rule-based methods
+(keyword matching + regex). No LLM or external AI service is used — all extraction is transparent and reproducible.
+
+---
+
 **Study type**
 Keywords matched against title + abstract (case-insensitive). Priority order:
 meta-analysis → review → clinical trial → cohort → case-control → in vitro → observational → other
@@ -42,8 +41,6 @@ Labels: `diagnostic` · `prognostic` · `predictive` · `pharmacodynamic` · `un
 **Directionality**
 Only sentences mentioning the biomarker are examined. Negated sentences are skipped.
 Labels: `increased` · `decreased` · `mixed` · `not reported`
-
-*All extraction is rule-based — no LLM or AI model is used.*
 """)
 
 # ── Session state ─────────────────────────────────────────────────────────────
