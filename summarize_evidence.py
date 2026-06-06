@@ -80,13 +80,14 @@ def summarize_biomarker(biomarker: str, rows: list[dict]) -> str:
     top_diseases = top_n(diseases, 3)
 
     synthesis = build_synthesis(biomarker, total, study_types, classifications, top_diseases)
-    diseases_inline = format_inline(count_field(rows, "disease")) if top_diseases else "(no data)"
+    directionalities = count_field(rows, "directionality")
 
     lines = [
         f"🧬 {biomarker} · {total} studies",
         "",
         f"🔬 Study types:      {format_inline(study_types)}",
         f"🏷️  Classification:   {format_inline(classifications)}",
+        f"📈 Directionality:   {format_inline(directionalities)}",
         f"🦠  Diseases:         {format_inline(Counter(dict(top_diseases)))}",
         "",
         f"💡 {synthesis}",
