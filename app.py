@@ -11,8 +11,8 @@ from st_aggrid import AgGrid, GridOptionsBuilder, GridUpdateMode
 from fetch_pubmed import build_query, search_pubmed, fetch_details, extract_evidence
 from summarize_evidence import generate_report
 
-st.set_page_config(page_title="Biomarker Evidence Pipeline", layout="wide")
-st.title("Biomarker Evidence Pipeline")
+st.set_page_config(page_title="Biomarker Evidence Explorer", layout="wide")
+st.title("🧬 Biomarker Evidence Explorer")
 st.caption("Search PubMed and extract structured biomarker evidence.")
 st.info(
     "ℹ️ **How it works:** This tool searches PubMed and extracts structured evidence fields "
