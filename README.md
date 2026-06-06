@@ -42,23 +42,28 @@ All biomarker extraction logic remains rule-based and fully interpretable, with 
     3. Falls back to the last substantive sentence, skipping trailing funding or acknowledgment lines (e.g. institution names with no verb)
 - Saves all fields to a CSV file
 
-### 2. `summarize_evidence.py` — Evidence summary
+### 2. `summarize_evidence.py` — Evidence Summary Report
 - Reads a CSV produced by `fetch_pubmed.py`
 - For each biomarker, computes:
   - Total number of studies
   - Breakdown of study types
   - Breakdown of biomarker classifications
+  - Breakdown of directionality (increased, decreased, mixed, not reported)
   - Top 3 associated diseases
   - A short synthesis paragraph assembled from the statistics
+- Renders each biomarker as a titled section with inline breakdowns
 - Prints a clean human-readable report to the terminal
 
 ### 3. `app.py` — Streamlit web interface
-- Interactive UI to run the full pipeline from a browser
-- Text inputs for biomarker and disease, number input for result count
+- Interactive UI to run the full pipeline from a browser — titled **🧬 Biomarker Evidence Explorer**
+- Displays an info banner explaining the rule-based, LLM-free extraction approach
+- Text inputs for biomarker(s) and disease, number input for result count
+- Supports multiple biomarkers (comma-separated), one PubMed query per biomarker
 - Displays extracted results in an interactive AgGrid table (sortable, resizable, with text wrapping)
 - Click any row to reveal the full abstract with first author, year, and a link to PubMed
 - Export all references as a BibTeX file with one click
-- Displays the evidence summary report below the table
+- Displays the **Evidence Summary Report** below the table, with each biomarker rendered as a subtitle
+- Author credit displayed on the page: Anne-Maud Ferreira · Co-developed with Claude (Anthropic)
 
 ---
 
@@ -127,7 +132,7 @@ A browser window opens at `http://localhost:8501`. Enter a biomarker, disease, a
 | `biomarker` | Biomarker search term |
 | `disease` | Disease search term |
 | `study_type` | Detected study design |
-| `key_finding` | Last sentence of the abstract |
+| `key_finding` | Conclusion sentence (from labelled section, conclusion cue, or last substantive sentence) |
 | `biomarker_classification` | Role of the biomarker |
 | `first_author` | First author name and initials (e.g. Smith JA) |
 | `journal` | Journal name |
