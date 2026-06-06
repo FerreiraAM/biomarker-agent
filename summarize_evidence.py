@@ -27,11 +27,11 @@ def top_n(counter: Counter, n: int) -> list[tuple[str, int]]:
     return counter.most_common(n)
 
 
-def format_breakdown(counter: Counter) -> str:
+def format_inline(counter: Counter) -> str:
     if not counter:
-        return "     • (no data)"
-    return "\n".join(
-        f"     • {value}: {count}"
+        return "(no data)"
+    return " · ".join(
+        f"{value} ({count})"
         for value, count in sorted(counter.items(), key=lambda x: -x[1])
     )
 
@@ -79,33 +79,18 @@ def summarize_biomarker(biomarker: str, rows: list[dict]) -> str:
     diseases = count_field(rows, "disease")
     top_diseases = top_n(diseases, 3)
 
+    synthesis = build_synthesis(biomarker, total, study_types, classifications, top_diseases)
+    diseases_inline = format_inline(count_field(rows, "disease")) if top_diseases else "(no data)"
+
     lines = [
-        f"{'━'*70}",
-        f"  🧬 {biomarker}",
-        f"{'━'*70}",
+        f"🧬 {biomarker} · {total} studies",
+        f"{'─'*60}",
         "",
-        "  📊 Overview",
-        f"     • Total studies: {total}",
+        f"🔬 Study types:      {format_inline(study_types)}",
+        f"🏷️  Classification:   {format_inline(classifications)}",
+        f"🦠  Diseases:         {format_inline(Counter(dict(top_diseases)))}",
         "",
-        "  🔬 Study Types",
-        format_breakdown(study_types),
-        "",
-        "  🏷️  Biomarker Classification",
-        format_breakdown(classifications),
-        "",
-        "  🦠 Associated Diseases",
-    ]
-
-    if top_diseases:
-        for disease, count in top_diseases:
-            lines.append(f"     • {disease}: {count}")
-    else:
-        lines.append("     • (no data)")
-
-    lines += [
-        "",
-        "  💡 Synthesis",
-        f"     {build_synthesis(biomarker, total, study_types, classifications, top_diseases)}",
+        f"💡 {synthesis}",
         "",
     ]
 
@@ -127,9 +112,8 @@ def generate_report(rows: list[dict]) -> str:
         return "No biomarker data found."
 
     header = "\n".join([
-        f"╔{'═'*70}╗",
-        f"  🧬 EVIDENCE SUMMARY REPORT — {len(groups)} biomarker(s) found",
-        f"╚{'═'*70}╝",
+        f"EVIDENCE SUMMARY REPORT — {len(groups)} biomarker(s) found",
+        f"{'═'*60}",
         "",
     ])
     sections = [header]
