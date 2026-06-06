@@ -113,6 +113,25 @@ A browser window opens at `http://localhost:8501`. Enter a biomarker, disease, a
 
 ---
 
+## BibTeX export
+
+After running a search, click **📄 Export all references as BibTeX** to download a `references.bib` file containing one entry per paper. Each entry includes:
+
+```bibtex
+@article{Smith2023,
+  author  = {Smith JA et al.},
+  title   = {BRCA1 mutations in breast cancer...},
+  journal = {Nature Genetics},
+  year    = {2023},
+  note    = {PMID: 12345678},
+  url     = {https://pubmed.ncbi.nlm.nih.gov/12345678/}
+}
+```
+
+The citation key is formatted as `LastNameYear` (e.g. `Smith2023`). The file can be imported directly into reference managers such as Zotero, Mendeley, or EndNote.
+
+---
+
 ## Limitations
 
 - **Biomarkers** — multiple biomarkers are supported (comma-separated), but NCBI limits unauthenticated requests to 3 per second; searches slow down noticeably above ~10 biomarkers
