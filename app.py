@@ -28,6 +28,24 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
+with st.expander("ℹ️ How extraction works"):
+    st.markdown("""
+**Study type**
+Keywords matched against title + abstract (case-insensitive). Priority order:
+meta-analysis → review → clinical trial → cohort → case-control → in vitro → observational → other
+
+**Classification**
+Sentence-level keyword/regex matching (negation-aware).
+Negated sentences (e.g. "no significant association") are skipped.
+Labels: `diagnostic` · `prognostic` · `predictive` · `pharmacodynamic` · `unclear`
+
+**Directionality**
+Only sentences mentioning the biomarker are examined. Negated sentences are skipped.
+Labels: `increased` · `decreased` · `mixed` · `not reported`
+
+*All extraction is rule-based — no LLM or AI model is used.*
+""")
+
 # ── Session state ─────────────────────────────────────────────────────────────
 if "papers" not in st.session_state:
     st.session_state.papers = []

@@ -140,6 +140,47 @@ A browser window opens at `http://localhost:8501`. Enter a biomarker, disease, a
 
 ---
 
+## Extraction rules
+
+All fields are extracted using keyword matching and regex on the title and abstract. No LLM or external AI service is used.
+
+### Study type
+Matched by keyword presence in the full text (title + abstract), in priority order:
+
+| Label | Keywords |
+|---|---|
+| `meta-analysis` | meta-analysis, systematic review and meta |
+| `review` | review, literature review, narrative review |
+| `clinical trial` | randomized, clinical trial, RCT, phase II/III |
+| `cohort` | cohort, longitudinal, prospective, retrospective |
+| `case-control` | case-control, cases and controls |
+| `in vitro` | in vitro, cell line, in vivo, mouse model |
+| `observational` | observational, cross-sectional, epidemiological |
+| `other` | (no keyword matched) |
+
+### Biomarker classification
+Matched at sentence level. Sentences containing negation cues (e.g. "no significant association", "was not", "failed to") are skipped.
+
+| Label | Keywords |
+|---|---|
+| `diagnostic` | diagnos, detection, sensitivity, specificity, AUC, ROC |
+| `prognostic` | prognos, survival, recurrence, outcome, mortality |
+| `predictive` | predict, response to, treatment response |
+| `pharmacodynamic` | pharmacodynamic, drug response, pharmacokinetic |
+| `unclear` | (no keyword matched) |
+
+### Directionality
+Only sentences that mention the biomarker by name are examined. Negated sentences are skipped.
+
+| Label | Patterns |
+|---|---|
+| `increased` | increased, upregulated, overexpressed, elevated, higher, amplified |
+| `decreased` | decreased, downregulated, underexpressed, reduced, lower, depleted |
+| `mixed` | both increased and decreased signals found |
+| `not reported` | no directionality pattern detected |
+
+---
+
 ## BibTeX export
 
 After running a search, click **📄 Export all references as BibTeX** to download a `references.bib` file containing one entry per paper. Each entry includes:
