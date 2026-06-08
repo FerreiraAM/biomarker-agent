@@ -37,39 +37,48 @@ def format_inline(counter: Counter) -> str:
 
 
 def build_synthesis(biomarker: str, total: int, study_types: Counter,
-                    classifications: Counter, top_diseases: list[tuple[str, int]]) -> str:
+                    classifications: Counter, top_diseases: list[tuple[str, int]],
+                    directionalities: Counter = None) -> str:
     """
-    Build a 2–3 sentence synthesis strictly from the computed statistics.
+    Build a translational synthesis sentence from the computed statistics.
     No values are invented or inferred beyond what the counters contain.
     """
-    sentences = []
+    disease = top_diseases[0][0] if top_diseases else "the studied disease"
+    top_type = study_types.most_common(1)[0][0] if study_types else None
 
-    # Sentence 1 — study count and top study type
-    if study_types:
-        top_type, top_type_n = study_types.most_common(1)[0]
-        sentences.append(
-            f"{total} studies were identified for {biomarker}, "
-            f"with {top_type} being the most common study design ({top_type_n} of {total})."
+    top_class, top_class_n = classifications.most_common(1)[0] if classifications else (None, 0)
+    dominant_class = top_class and (top_class_n / total) >= 0.5 and top_class != "unclear"
+
+    # Directionality signal
+    top_dir = directionalities.most_common(1)[0][0] if directionalities else None
+    mixed_dir = top_dir == "mixed"
+    clear_dir = top_dir and top_dir not in ("none detected", "mixed")
+
+    study_part = f"with evidence derived mainly from {top_type} studies" if top_type else ""
+    dir_part = f"showing {top_dir} expression" if clear_dir else ""
+
+    if dominant_class and not mixed_dir:
+        sentence = (
+            f"The literature primarily supports {biomarker} as a {top_class} biomarker "
+            f"in {disease}"
         )
+        parts = [p for p in [study_part, dir_part] if p]
+        if parts:
+            sentence += ", " + " and ".join(parts) + "."
+        else:
+            sentence += "."
     else:
-        sentences.append(f"{total} studies were identified for {biomarker}.")
-
-    # Sentence 2 — classification
-    if classifications:
-        top_class, top_class_n = classifications.most_common(1)[0]
-        sentences.append(
-            f"The biomarker was most frequently classified as {top_class} "
-            f"({top_class_n} of {total} studies)."
+        heterogeneous_reason = "mixed directionality" if mixed_dir else "no dominant biomarker role"
+        sentence = (
+            f"The literature on {biomarker} in {disease} is heterogeneous, "
+            f"with {heterogeneous_reason} emerging from the current evidence set"
         )
+        if study_part:
+            sentence += f" ({study_part})."
+        else:
+            sentence += "."
 
-    # Sentence 3 — top associated diseases
-    if top_diseases:
-        disease_list = ", ".join(d for d, _ in top_diseases)
-        sentences.append(
-            f"The most frequently associated disease context(s) were: {disease_list}."
-        )
-
-    return " ".join(sentences)
+    return sentence
 
 
 def summarize_biomarker(biomarker: str, rows: list[dict]) -> str:
@@ -79,7 +88,7 @@ def summarize_biomarker(biomarker: str, rows: list[dict]) -> str:
     diseases = count_field(rows, "disease")
     top_diseases = top_n(diseases, 3)
 
-    synthesis = build_synthesis(biomarker, total, study_types, classifications, top_diseases)
+    synthesis = build_synthesis(biomarker, total, study_types, classifications, top_diseases, directionalities)
     directionalities = count_field(rows, "directionality")
 
     lines = [
