@@ -88,8 +88,8 @@ def summarize_biomarker(biomarker: str, rows: list[dict]) -> str:
     diseases = count_field(rows, "disease")
     top_diseases = top_n(diseases, 3)
 
-    synthesis = build_synthesis(biomarker, total, study_types, classifications, top_diseases, directionalities)
     directionalities = count_field(rows, "directionality")
+    synthesis = build_synthesis(biomarker, total, study_types, classifications, top_diseases, directionalities)
 
     lines = [
         f"🧬 {biomarker} · {total} studies",
