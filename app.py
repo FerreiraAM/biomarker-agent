@@ -105,7 +105,7 @@ if search:
     st.session_state.df = pd.DataFrame(all_papers)[[
         "pmid", "title", "year",
         "study_type", "biomarker_classification", "directionality",
-        "key_finding", "abstract", "first_author", "journal",
+        "key_finding", "abstract", "first_author", "journal", "biomarker",
     ]].rename(columns={
         "pmid":                     "PMID",
         "title":                    "Title",
@@ -117,6 +117,7 @@ if search:
         "abstract":                 "Abstract",
         "first_author":             "First Author",
         "journal":                  "Journal",
+        "biomarker":                "Biomarker",
     })
     st.session_state.report = generate_report(all_papers)
 
@@ -161,6 +162,7 @@ if st.session_state.df is not None:
 
     gb = GridOptionsBuilder.from_dataframe(df.reset_index(drop=True))
     gb.configure_default_column(wrapText=True, autoHeight=True, resizable=True)
+    gb.configure_column("Biomarker",      width=120, pinned="left", hide=len(biomarkers) == 1)
     gb.configure_column("PMID",           width=100)
     gb.configure_column("Year",           width=80)
     gb.configure_column("First Author",   hide=True)
@@ -187,7 +189,7 @@ if st.session_state.df is not None:
     if selected is not None and len(selected) > 0:
         row = selected[0] if isinstance(selected, list) else selected.iloc[0]
         tip.caption("⬇️ Abstract loaded — scroll down to read it.")
-        st.subheader("Abstract")
+        st.subheader(f"Abstract — 🧬 {row['Biomarker']}")
         pubmed_url = f"https://pubmed.ncbi.nlm.nih.gov/{row['PMID']}/"
         st.markdown(f"🔗 [View on PubMed]({pubmed_url})")
         st.info(f"**{row['Title']}**\n{row['First Author']} et al. ({row['Year']})\n\n{row['Abstract']}")

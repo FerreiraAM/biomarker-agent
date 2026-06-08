@@ -58,7 +58,7 @@ All biomarker extraction logic remains rule-based and fully interpretable, with 
 - Interactive UI to run the full pipeline from a browser — titled **🧬 Biomarker Evidence Explorer**
 - Displays an info banner explaining the rule-based, LLM-free extraction approach
 - Text inputs for biomarker(s) and disease, number input for result count
-- Supports multiple biomarkers (comma-separated), one PubMed query per biomarker
+- Supports multiple biomarkers (comma-separated), one PubMed query per biomarker; a Biomarker column appears automatically in the table when more than one biomarker is searched
 - Displays extracted results in an interactive AgGrid table (sortable, resizable, with text wrapping)
 - Click any row to reveal the full abstract with first author, year, and a link to PubMed
 - Export all references as a BibTeX file with one click
