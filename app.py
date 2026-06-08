@@ -63,7 +63,7 @@ with st.form("search_form"):
     with col3:
         max_results = st.number_input("Max results per biomarker", min_value=1, max_value=50, value=10)
     st.caption("Separate multiple biomarkers with a comma.")
-    search = st.form_submit_button("Search PubMed", type="primary")
+    search = st.form_submit_button("Search PubMed", type="primary", use_container_width=False)
 
 # ── Pipeline ──────────────────────────────────────────────────────────────────
 if search:
@@ -151,6 +151,7 @@ if st.session_state.df is not None:
         data=build_bibtex_all(df),
         file_name="references.bib",
         mime="text/plain",
+        key="bibtex_download",
     )
 
     gb = GridOptionsBuilder.from_dataframe(df.reset_index(drop=True))
