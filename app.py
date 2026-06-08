@@ -189,8 +189,8 @@ if st.session_state.df is not None:
         tip.caption("⬇️ Abstract loaded — scroll down to read it.")
         st.subheader("Abstract")
         pubmed_url = f"https://pubmed.ncbi.nlm.nih.gov/{row['PMID']}/"
-        st.info(f"**{row['Title']}**\n{row['First Author']} et al. ({row['Year']})\n\n{row['Abstract']}")
         st.markdown(f"🔗 [View on PubMed]({pubmed_url})")
+        st.info(f"**{row['Title']}**\n{row['First Author']} et al. ({row['Year']})\n\n{row['Abstract']}")
 
     # ── Evidence summary ──────────────────────────────────────────────────────
     st.subheader("Evidence Summary Report")
