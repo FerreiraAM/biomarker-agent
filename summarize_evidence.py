@@ -44,7 +44,10 @@ def build_synthesis(biomarker: str, total: int, study_types: Counter,
     No values are invented or inferred beyond what the counters contain.
     """
     disease = top_diseases[0][0] if top_diseases else "the studied disease"
-    top_type = study_types.most_common(1)[0][0] if study_types else None
+    # Best classified study type (skip unclassified)
+    classified_types = Counter({k: v for k, v in study_types.items() if k != "unclassified"})
+    top_type, top_type_n = classified_types.most_common(1)[0] if classified_types else (None, 0)
+    dominant_type = top_type and (top_type_n / total) >= 0.4
 
     top_class, top_class_n = classifications.most_common(1)[0] if classifications else (None, 0)
     dominant_class = top_class and (top_class_n / total) >= 0.5 and top_class != "unclear"
@@ -54,29 +57,28 @@ def build_synthesis(biomarker: str, total: int, study_types: Counter,
     mixed_dir = top_dir == "mixed"
     clear_dir = top_dir and top_dir not in ("none detected", "mixed")
 
-    study_part = f"with evidence derived mainly from {top_type} studies" if top_type else ""
+    if dominant_type:
+        study_part = f"with evidence derived mainly from {top_type} studies"
+    else:
+        study_part = "across heterogeneous study designs"
     dir_part = f"showing {top_dir} expression" if clear_dir else ""
 
     if dominant_class and not mixed_dir:
         sentence = (
             f"The literature primarily supports {biomarker} as a {top_class} biomarker "
-            f"in {disease}"
+            f"in {disease}, {study_part}"
         )
-        parts = [p for p in [study_part, dir_part] if p]
-        if parts:
-            sentence += ", " + " and ".join(parts) + "."
+        if dir_part:
+            sentence += f" and {dir_part}."
         else:
             sentence += "."
     else:
         heterogeneous_reason = "mixed directionality" if mixed_dir else "no dominant biomarker role"
         sentence = (
             f"The literature on {biomarker} in {disease} is heterogeneous, "
-            f"with {heterogeneous_reason} emerging from the current evidence set"
+            f"with {heterogeneous_reason} emerging from the current evidence set "
+            f"({study_part})."
         )
-        if study_part:
-            sentence += f" ({study_part})."
-        else:
-            sentence += "."
 
     return sentence
 
