@@ -136,7 +136,7 @@ def detect_study_type(text: str) -> str:
     for study_type, keywords in STUDY_TYPE_KEYWORDS.items():
         if any(kw in lower for kw in keywords):
             return study_type
-    return "other"
+    return "unclassified"
 
 
 def _sentences(text: str) -> list[str]:

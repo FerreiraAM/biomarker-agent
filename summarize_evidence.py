@@ -87,7 +87,7 @@ def summarize_biomarker(biomarker: str, rows: list[dict]) -> str:
         "",
         f"🔬 Study types:      {format_inline(study_types)}",
         f"🏷️  Classification:   {format_inline(classifications)}",
-        f"📈 Directionality:   {format_inline(directionalities)}",
+        f"📈 Expression change: {format_inline(Counter({('none detected' if k == 'not reported' else k): v for k, v in directionalities.items()}))}",
         f"🦠  Diseases:         {format_inline(Counter(dict(top_diseases)))}",
         "",
         f"💡 {synthesis}",
