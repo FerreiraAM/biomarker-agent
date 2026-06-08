@@ -179,7 +179,7 @@ def detect_directionality(text: str, biomarker: str) -> str:
         return "increased"
     if "decreased" in found:
         return "decreased"
-    return "not reported"
+    return "none detected"
 
 
 def detect_classification(text: str) -> str:

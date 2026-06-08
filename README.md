@@ -35,7 +35,7 @@ All biomarker extraction logic remains rule-based and fully interpretable, with 
 - Applies rule-based extraction to each abstract:
   - **study_type** — e.g. cohort, clinical trial, review, in vitro
   - **biomarker_classification** — diagnostic, prognostic, predictive, pharmacodynamic, or unclear
-  - **directionality** — increased, decreased, mixed, or not reported (negation-aware)
+  - **directionality** — increased, decreased, mixed, or none detected (negation-aware)
   - **key_finding** — extracted using a three-step strategy:
     1. Looks for a labelled `CONCLUSIONS` / `INTERPRETATION` / `SIGNIFICANCE` section (structured abstracts)
     2. Looks for sentences containing conclusion-indicator phrases (`Our findings`, `We conclude`, `These results`, `Taken together`, `In conclusion`, etc.)
@@ -48,7 +48,7 @@ All biomarker extraction logic remains rule-based and fully interpretable, with 
   - Total number of studies
   - Breakdown of study types
   - Breakdown of biomarker classifications
-  - Breakdown of directionality (increased, decreased, mixed, not reported)
+  - Breakdown of directionality (increased, decreased, mixed, none detected)
   - Top 3 associated diseases
   - A short synthesis paragraph assembled from the statistics
 - Renders each biomarker as a titled section with inline breakdowns
@@ -177,7 +177,7 @@ Only sentences that mention the biomarker by name are examined. Negated sentence
 | `increased` | increased, upregulated, overexpressed, elevated, higher, amplified |
 | `decreased` | decreased, downregulated, underexpressed, reduced, lower, depleted |
 | `mixed` | both increased and decreased signals found |
-| `not reported` | no directionality pattern detected |
+| `none detected` | no directionality pattern detected |
 
 ---
 
