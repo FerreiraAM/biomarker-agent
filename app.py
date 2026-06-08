@@ -127,7 +127,7 @@ if st.session_state.df is not None:
     biomarkers = st.session_state.biomarkers
 
     st.subheader(f"Results — {len(papers)} paper(s) across {len(biomarkers)} biomarker(s)")
-    st.caption("💡 Tip: Click on any cell in a row to display the full abstract below the table.")
+    tip = st.empty()
 
     # ── BibTeX export for all results ─────────────────────────────────────────
     def build_bibtex_all(dataframe: pd.DataFrame) -> str:
@@ -157,6 +157,8 @@ if st.session_state.df is not None:
         key="bibtex_download",
     )
 
+    tip.caption("💡 Tip: Click on any cell in a row to display the full abstract below the table.")
+
     gb = GridOptionsBuilder.from_dataframe(df.reset_index(drop=True))
     gb.configure_default_column(wrapText=True, autoHeight=True, resizable=True)
     gb.configure_column("PMID",           width=100)
@@ -184,10 +186,10 @@ if st.session_state.df is not None:
     selected = grid_response.get("selected_rows")
     if selected is not None and len(selected) > 0:
         row = selected[0] if isinstance(selected, list) else selected.iloc[0]
+        tip.caption("⬇️ Abstract loaded — scroll down to read it.")
         st.subheader("Abstract")
         pubmed_url = f"https://pubmed.ncbi.nlm.nih.gov/{row['PMID']}/"
         st.info(f"**{row['Title']}**\n{row['First Author']} et al. ({row['Year']})\n\n{row['Abstract']}")
-
         st.markdown(f"🔗 [View on PubMed]({pubmed_url})")
 
     # ── Evidence summary ──────────────────────────────────────────────────────
