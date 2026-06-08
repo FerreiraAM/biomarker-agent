@@ -4,6 +4,8 @@ Usage:
     streamlit run app.py
 """
 
+import re
+
 import pandas as pd
 import streamlit as st
 from st_aggrid import AgGrid, GridOptionsBuilder, GridUpdateMode
@@ -71,7 +73,8 @@ if search:
         st.warning("Please enter at least one biomarker and a disease.")
         st.stop()
 
-    biomarkers = [b.strip() for b in biomarker_input.split(",") if b.strip()]
+    biomarkers = [re.sub(r'\s+([+\-])', r'\1', b.strip())
+                  for b in biomarker_input.split(",") if b.strip()]
     all_papers = []
 
     for biomarker in biomarkers:
