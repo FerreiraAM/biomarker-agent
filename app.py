@@ -42,7 +42,9 @@ Labels: `diagnostic` · `prognostic` · `predictive` · `pharmacodynamic` · `un
 
 **Directionality**
 Only sentences mentioning the biomarker are examined. Negated sentences are skipped.
-Labels: `increased` · `decreased` · `mixed` · `not reported`
+Labels: `increased` · `decreased` · `mixed` · `none detected`
+
+📖 [Full technical documentation on GitHub](https://github.com/FerreiraAM/biomarker-agent#readme)
 """)
 
 # ── Session state ─────────────────────────────────────────────────────────────
