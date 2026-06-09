@@ -176,6 +176,7 @@ if st.session_state.df is not None:
     gb.configure_column("Key Finding",    width=300)
     gb.configure_column("Abstract",       hide=True)
     gb.configure_selection(selection_mode="single", use_checkbox=False)
+    gb.configure_grid_options(enableCellTextSelection=True, ensureDomOrder=True)
 
     grid_response = AgGrid(
         df.reset_index(drop=True),
